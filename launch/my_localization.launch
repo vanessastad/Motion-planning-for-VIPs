@@ -1,0 +1,152 @@
+<launch>
+
+<!-- ############## MAP ############################# 
+  <node name= "map_server" pkg="map_server" type="map_server" args="$(find my_navigation)/my_map.pgm my_map_resolution"/>-->
+
+  <arg name="map_file" default="$(find my_navigation)/map/my_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+
+
+<!-- ############## PLATFORM SPECIFIC (CUFF) ############################# -->
+
+
+
+<!-- ############## TRANSFORMATION ############################# -->
+
+  <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 /odom /base_link 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster1" args="0 0 0 0 0 0 1 /base_link /laser_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster2" args="0 0 0 0 0 0 1 /base_link /camera_link 100" /> 
+  <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster3" args="0 0 0 0 0 0 1 /base_link /imu_link 200" /> 
+
+
+<!-- ############## CAMERA ############################# -->
+
+  <arg name="offline"          default="false"/>
+  <include unless="$(arg offline)" 
+      file="$(find realsense2_camera)/launch/rs_d435_camera_with_model.launch">
+      <arg name="align_depth" value="false"/>
+      <arg name="linear_accel_cov" value="1.0"/>
+      <arg name="unite_imu_method" value="linear_interpolation"/>
+      <arg name="depth_fps"           default="30"/>
+      <arg name="infra_fps"           default="30"/>
+      <arg name="color_fps"           default="30"/>
+  </include>
+
+
+<!-- ############## IMU ############################# -->
+
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="ImuFilter">
+        <param name="use_mag" type="bool" value="false" />
+        <param name="publish_tf_" type="bool" value="true" /> <!-- false-->
+        <!-- <param name="world_frame_" type="string" value="enu" /> -->
+        <param name="fixed_frame" value="odom" />
+        <!-- <remap from="/imu/data_raw" to="/camera/imu"/> -->
+  </node>
+
+
+<!-- ############## DEPTHIMAGE_TO_LASERSCAN ############################# -->
+
+  <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" > 
+      <param name="scan_time" value="1"/>
+      <param name="range_max" value="10.0"/>
+      <param name="desired_offset" value="-100"/>
+      <remap from="image" to="/camera/depth/image_rect_raw"/>
+      <remap from="scan" to="/scan" /> 
+  </node>
+  <!--in DepthImageToLaserScan.h change "desired_offset" to change the laser_fake layer--> 
+
+
+<!-- ############## LASERS_FILTER ############################# -->
+
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
+    <rosparam command="load" file="$(find my_navigation)/config/my_laser_config.yaml" />  
+  </node>
+
+
+<!-- ############## NAVIGATION ############################# -->
+
+  <node pkg="gmapping" type="slam_gmapping" respawn="false" name="slam_gmapping" output="screen">
+      <rosparam file="$(find my_navigation)/config/my_gmapping_params.yaml" command="load"/> 
+  </node>
+
+
+<!-- ############## PLANNERS ############################# -->
+
+<!--
+  <node name = "planning" pkg = "my_navigation" type = "planning" args = "turtle1" output = "screen"/>
+    <param name = "plotting" type = "bool" value = "true" />
+    <param name = "minAngle" type = "int" value = "30"/>
+    <param name = "maxAngle" type = "int" value = "60"/>
+    <param name = "moreAdj" type = "int" value = "1"/>
+    <param name = "w_length" type = "int" value = "1"/>
+    <param name = "w_degRot" type = "int" value = "1"/>
+    <param name = "w_numRot" type = "int" value = "1"/>
+    
+    
+    <node name = "planning1" pkg = "my_navigation" type = "planning1" args = "turtle1" output = "screen"/>
+    <param name = "plotting" type = "bool" value = "true" />
+    <param name = "minAngle" type = "int" value = "30"/>
+    <param name = "maxAngle" type = "int" value = "60"/>
+    <param name = "maxSamples" type = "int" value = "5000"/>s
+    <param name = "eta" type = "double" value = "100.0"/>
+    <param name = "w_length" type = "int" value = "1"/>
+    <param name = "w_degRot" type = "int" value = "1"/>
+    <param name = "w_numRot" type = "int" value = "1"/>
+    -->
+
+    <node name = "planning2" pkg = "my_navigation" type = "planning2" args = "turtle1" output="screen"/>
+    <param name = "plotting" type = "bool" value = "true" />
+    <param name = "minAngle" type = "int" value = "30"/>
+    <param name = "maxAngle" type = "int" value = "60"/>
+    <param name = "w_length" type = "int" value = "1"/>
+    <param name = "w_degRot" type = "int" value = "1"/>
+    <param name = "w_numRot" type = "int" value = "100"/>
+    <param name = "TotGenerations" type = "int" value = "500"/>
+    <param name = "numIndividuals" type = "int" value = "300"/>
+    <param name = "m" type = "int" value = "10"/>
+
+
+<!-- ############## MOVE_BASE ############################# -->
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find my_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find my_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find my_navigation)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find my_navigation)/config/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="$(find my_navigation)/config/base_local_params.yaml" command="load" />
+    <param name="base_global_planner" value="GA"/>
+    <param name="base_local_planner" value="SimplePlannerROS"/>
+    <!--<param name="base_global_planner" value="RRTstar"/>
+        <param name="base_global_planner" value="class_planning"/>
+        <remap from="cmd_vel" to="" /> -->
+  
+  </node>
+
+
+<!-- ############## AMCL ############################# -->
+
+  <node pkg="amcl" type="amcl" name="amcl">
+    <rosparam file="$(find my_navigation)/config/amcl_params.yaml" command="load" />
+    <remap from="/scan" to="/scan_filtered"/>
+  </node>
+
+
+<!-- ############## ROBOT_LOCALIZATION #############################-->
+
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+      <rosparam file="$(find my_navigation)/config/robort_pose_ekf_params.yaml" command="load" />
+    </node>
+
+
+<!-- ############## RVIZ ############################# -->
+
+<!--  RVIZ started from "$(find realsense2_camera)/launch/rs_d435_camera_with_model.launch"
+      
+      /home/federica/.rviz/config_vane.rviz is a user-dependent path
+
+      load on GitHub the config_vane.rviz file, than I will integrate our file with the realsense2 provided one
+-->
+   <node type="rviz" name="rviz" pkg="rviz" args="-d /home/federica/.rviz/config_vane.rviz" /> 
+
+</launch>
