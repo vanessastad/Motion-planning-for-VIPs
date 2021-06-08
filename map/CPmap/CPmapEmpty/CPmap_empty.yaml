@@ -1,0 +1,10 @@
+image: CPmap_empty.pgm
+#image: cino.png
+resolution: 0.050000
+origin: [-51.224998, -51.224998, 0]
+#origin: [-25, -2, 0]
+#1.57079]
+negate: 0
+occupied_thresh: 0.5
+free_thresh: 0.2 #0.196
+

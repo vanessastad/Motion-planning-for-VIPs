@@ -1,0 +1,5 @@
+ <library path="lib/libplanning1">
+  <class name="RRTstar" type="RRTstar" base_class_type="nav_core::BaseGlobalPlanner">
+    <description>This is a global planner plugin by VIPs project.</description>
+  </class>
+ </library>

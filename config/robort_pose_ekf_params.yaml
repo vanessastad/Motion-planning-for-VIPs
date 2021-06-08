@@ -1,0 +1,43 @@
+output_frame: odom
+freq: 30.0
+sensor_timeout: 1.0
+odom_used: true
+imu_used: true
+vo_used: true
+debug: false
+self_diagnose: false
+
+/ekf_se/odom0_relative: true
+/ekf_se/odom0_pose_rejection_threshold: 10000
+/ekf_se/odom0_twist_rejection_threshold: 10000
+/ekf_se/pose0: amcl_pose
+/ekf_se/imu0: /imu/data
+/ekf_se/two_d_mode: true
+
+/ekf_se/pose0_config: [true,true,false,
+                      false, false,true,
+                      false,false,false,
+                      false,false,false,
+                      false,false,false]
+
+/ekf_se/imu0_config: [true, true, false,
+                      false,  false,  true,
+                      true,  true,  false,
+                      false,  false,  true,
+                      true,  true,  false]
+                      
+process_noise_covariance: [0.05, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0.05, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0.0,  0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0.0,  0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0.0,  0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0.06, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0.025, 0,     0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0.025, 0,    0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0.0,  0,    0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0.0,  0,    0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.0,  0,    0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.02, 0,    0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.01, 0,    0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.01, 0,
+                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.0]                      

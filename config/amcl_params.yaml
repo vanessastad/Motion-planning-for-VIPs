@@ -1,0 +1,53 @@
+amcl:
+    use_map_topic: true
+    map: /map
+    tf_broadcast: true 
+    base_frame_id: base_link
+    global_frame_id: map
+        
+# Publish scans from best pose at a max of 10 Hz
+    transform_tolerance: 0.3
+    gui_publish_rate: 10.0
+    laser_max_beams: 30
+    min_particles: 500
+    max_particles: 5000
+    kld_err: 0.01
+    kld_z: 0.99
+    odom_model_type: diff
+    odom_alpha1: 0.005
+    odom_alpha2: 0.005
+
+# translation std dev, m 
+    odom_alpha3: 0.005
+    odom_alpha4: 0.005
+    odom_alpha5: 0.005
+
+    pdate_min_d: 0.30
+    update_min_a: 0.10
+
+    resample_interval: 1
+    recovery_alpha_slow: 0.01
+    recovery_alpha_fast: 0.1
+        
+
+    laser_z_hit: 0.5
+    laser_z_short: 0.05
+    laser_z_max: 0.05
+    laser_z_rand: 0.5
+    laser_sigma_hit: 0.2
+    laser_lambda_short: 0.1
+    laser_lambda_short: 0.1
+    laser_max_range: 10
+    laser_model_typ: likelihood_field
+
+
+#param name="laser_model_type" value="beam"
+    laser_likelihood_max_dist: 1
+
+# Increase tolerance because the computer can get quite busy 
+    initial_pose_x: 14.48
+    initial_pose_y: 30.62
+    initial_pose_a: 0
+    initial_cov_xx: 0
+    initial_cov_yy: 0
+    initial_cov_aa: 0

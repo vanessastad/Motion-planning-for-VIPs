@@ -1,0 +1,15 @@
+local_costmap:
+
+  global_frame: odom
+  robot_base_frame: /base_footprint #/base_link
+  update_frequency: 5.0 #1.0, 5.0 per rrtstar
+  static_map: false
+
+  publish_frequency: 2.0 #0.0
+  width: 14.0 
+  height: 4.0
+  rolling_window: true
+  resolution: 0.02 # It has to be small
+  plugins:
+    - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
+    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

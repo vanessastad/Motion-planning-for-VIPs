@@ -1,0 +1,5 @@
+ <library path="lib/libplanning2">
+  <class name="GA" type="GA" base_class_type="nav_core::BaseGlobalPlanner">
+    <description>This is a global planner plugin by VIPs project.</description>
+  </class>
+ </library>

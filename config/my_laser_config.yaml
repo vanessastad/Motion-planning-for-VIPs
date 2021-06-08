@@ -1,0 +1,4 @@
+scan_filter_chain:
+  name: interpolation #For any measurement in the scan which is invalid, the interpolation comes up with a measurement which is an interpolation between the surrounding good values. 
+  type: laser_filters/InterpolationFilter
+
