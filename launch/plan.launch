@@ -1,0 +1,21 @@
+<launch>
+
+  <node name = "planning" pkg = "planning_pkg" type = "planning" args = "turtle1" output = "screen"/>
+    <param name = "plotting" type = "bool" value = "true" />
+    <param name = "minAngle" type = "int" value = "30"/>
+    <param name = "maxAngle" type = "int" value = "60"/>
+    <param name = "moreAdj" type = "int" value = "1"/>
+    <param name = "w_length" type = "int" value = "1"/>
+    <param name = "w_degRot" type = "int" value = "1"/>
+    <param name = "w_numRot" type = "int" value = "1"/>
+
+</launch>
+
+
+
+
+
+
+
+
+
