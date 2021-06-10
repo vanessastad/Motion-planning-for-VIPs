@@ -26,7 +26,7 @@ Finally it has been integrated with the CUFF an haptic and wearable device with 
   - sudo apt install librealsense2-dev
   - sudo apt install librealsense2-dbg
 
-**ACHTUNG** ros-[ROS-VERSION]-depthimage-to-laserscan is not provided for *Noetic* distro (update 31-March-2021) 
+**ACHTUNG** ros-[ROS-VERSION]-depthimage-to-laserscan is not provided for *Noetic* distro 
 
 ### RealSense2
 
